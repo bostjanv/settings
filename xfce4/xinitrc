@@ -1,0 +1,4 @@
+;; put this file to $HOME/.config/xfce4
+
+xset b off
+xset r rate 500 60

@@ -1,0 +1,113 @@
+;; set the fonts and colors I like
+(global-font-lock-mode t)
+;;(set-default-font "-*-profont-medium-r-normal--12-*-72-72-c-60-iso8859-1")
+;;(set-default-font "Liberation Mono-13:bold")
+(set-default-font "Liberation Mono-13")
+;;(set-default-font "Monaco-13")
+(set-mouse-color "black")
+;;(setq hl-line-mode t)
+(global-hl-line-mode 1)
+(scroll-bar-mode -1)
+
+(load-library "view")
+(require 'cc-mode)
+(require 'ido)
+(require 'compile)
+(ido-mode t)
+
+;; Abbrevation expansion
+(abbrev-mode 1)
+
+(define-key global-map "\t" 'dabbrev-expand)
+(define-key global-map [S-tab] 'indent-for-tab-command)
+(define-key global-map [backtab] 'indent-for-tab-command)
+(define-key global-map [C-tab] 'indent-region)
+(define-key global-map "	" 'indent-region)
+
+(defun casey-never-split-a-window
+    "Never, ever split a window.  Why would anyone EVER want you to do that??"
+    nil)
+(setq split-window-preferred-function 'casey-never-split-a-window)
+
+; no screwing with my middle mouse button
+(global-unset-key [mouse-2])
+
+;;(set-face-background 'hl-line "#3e4446")
+(set-face-background 'hl-line "midnight blue")
+
+; Setup my find-files
+(define-key global-map "\ef" 'find-file)
+(define-key global-map "\eF" 'find-file-other-window)
+
+;;(setq visible-bell t)             ;; Get rid of the beeps
+(setq visible-bell nil)
+(tool-bar-mode 0)                 ;; No toolbars
+(menu-bar-mode 0)                 ;; No menus
+
+; Turn off the bell on Mac OS X
+(defun nil-bell ())
+(setq ring-bell-function 'nil-bell)
+
+; Smooth scroll
+(setq scroll-step 3)
+
+; Clock
+(display-time)
+
+; Startup windowing
+(setq next-line-add-newlines nil)
+(setq-default truncate-lines t)
+(setq truncate-partial-width-windows nil)
+(split-window-horizontally)
+
+;; F1 - Help? Isn’t Control-H good enough?
+;; F2 - Standard alternate meta key with lots of bindings
+;; F3 - Define a keyboard macro
+;; F4 - Replay a keyboard macro
+;; F5 - Repeat the last command …
+;; F6 - Repeat the last command entered at the M-x prompt
+;; F7 - Switch to another window … Shift goes the other way.
+;; F8 - Switch to buffer
+;; F9 - My other meta key for changing colors and other odd bindings that I actually don’t use that often
+
+
+;; (global-set-key (kbd "<f5>") 'repeat)
+;; (global-set-key (kbd "<f6>") 'repeat-complex-command)
+
+(global-set-key (kbd "<f5>") 'recompile)
+
+(global-set-key (kbd "<f7>") 'other-window)
+(global-set-key (kbd "S-<f7>")
+                '(lambda () "Previous Window" (interactive) (other-window -1)))
+(global-set-key (kbd "<f8>") 'ibuffer)
+(global-set-key (kbd "S-<f8>") 'switch-to-next-buffer)
+(global-set-key (kbd "C-x C-b") 'ibuffer) ;; Use Ibuffer for Buffer List
+
+;;(setq custom-file "~/.emacs-custom.el")
+;;(load custom-file)
+
+
+;;(global-set-key (kbd "\t") 'dabbrev-expand)
+(define-key global-map "\t" 'dabbrev-expand)
+
+(set-face-attribute 'default t :font "Liberation Mono-13")
+(set-face-attribute 'font-lock-builtin-face nil :foreground "#DAB98F")
+(set-face-attribute 'font-lock-comment-face nil :foreground "gray50")
+(set-face-attribute 'font-lock-constant-face nil :foreground "olive drab")
+(set-face-attribute 'font-lock-doc-face nil :foreground "gray50")
+(set-face-attribute 'font-lock-function-name-face nil :foreground "burlywood3")
+(set-face-attribute 'font-lock-keyword-face nil :foreground "DarkGoldenrod3")
+(set-face-attribute 'font-lock-string-face nil :foreground "olive drab")
+(set-face-attribute 'font-lock-type-face nil :foreground "burlywood3")
+(set-face-attribute 'font-lock-variable-name-face nil :foreground "burlywood3")
+
+
+(defun post-load-stuff ()
+  (interactive)
+  (menu-bar-mode -1)
+  ;;(maximize-frame)
+  (set-foreground-color "burlywood3")
+  (set-background-color "#161616")
+  (set-cursor-color "#40FF40")
+)
+(add-hook 'window-setup-hook 'post-load-stuff t)

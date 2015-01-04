@@ -36,8 +36,8 @@
 (set-face-background 'hl-line "midnight blue")
 
 ; Setup my find-files
-(define-key global-map "\ef" 'find-file)
-(define-key global-map "\eF" 'find-file-other-window)
+;;(define-key global-map "\ef" 'find-file)
+;;(define-key global-map "\eF" 'find-file-other-window)
 
 ;;(setq visible-bell t)             ;; Get rid of the beeps
 (setq visible-bell nil)

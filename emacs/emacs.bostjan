@@ -2,7 +2,7 @@
 (global-font-lock-mode t)
 ;;(set-default-font "-*-profont-medium-r-normal--12-*-72-72-c-60-iso8859-1")
 ;;(set-default-font "Liberation Mono-13:bold")
-(set-default-font "Liberation Mono-13")
+(set-default-font "Liberation Mono-12")
 ;;(set-default-font "Monaco-13")
 (set-mouse-color "black")
 ;;(setq hl-line-mode t)
@@ -18,11 +18,14 @@
 ;; Abbrevation expansion
 (abbrev-mode 1)
 
-(define-key global-map "\t" 'dabbrev-expand)
-(define-key global-map [S-tab] 'indent-for-tab-command)
-(define-key global-map [backtab] 'indent-for-tab-command)
-(define-key global-map [C-tab] 'indent-region)
-(define-key global-map "	" 'indent-region)
+;; remove trailing whitespace
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+;(define-key global-map "\t" 'dabbrev-expand)
+;(define-key global-map [S-tab] 'indent-for-tab-command)
+;(define-key global-map [backtab] 'indent-for-tab-command)
+;(define-key global-map [C-tab] 'indent-region)
+;(define-key global-map "	" 'indent-region)
 
 (defun casey-never-split-a-window
     "Never, ever split a window.  Why would anyone EVER want you to do that??"
@@ -83,14 +86,17 @@
 (global-set-key (kbd "S-<f8>") 'switch-to-next-buffer)
 (global-set-key (kbd "C-x C-b") 'ibuffer) ;; Use Ibuffer for Buffer List
 
+(global-set-key (kbd "M-n") 'next-error)
+
+
 ;;(setq custom-file "~/.emacs-custom.el")
 ;;(load custom-file)
 
 
 ;;(global-set-key (kbd "\t") 'dabbrev-expand)
-(define-key global-map "\t" 'dabbrev-expand)
+;;(define-key global-map "\t" 'dabbrev-expand)
 
-(set-face-attribute 'default t :font "Liberation Mono-13")
+(set-face-attribute 'default t :font "Liberation Mono-12")
 (set-face-attribute 'font-lock-builtin-face nil :foreground "#DAB98F")
 (set-face-attribute 'font-lock-comment-face nil :foreground "gray50")
 (set-face-attribute 'font-lock-constant-face nil :foreground "olive drab")
@@ -111,3 +117,49 @@
   (set-cursor-color "#40FF40")
 )
 (add-hook 'window-setup-hook 'post-load-stuff t)
+
+; Bright-red TODOs
+ (setq fixme-modes '(c++-mode c-mode emacs-lisp-mode))
+ (make-face 'font-lock-fixme-face)
+ (make-face 'font-lock-note-face)
+ (mapc (lambda (mode)
+	 (font-lock-add-keywords
+	  mode
+	  '(("\\<\\(TODO\\)" 1 'font-lock-fixme-face t)
+            ("\\<\\(NOTE\\)" 1 'font-lock-note-face t))))
+	fixme-modes)
+ (modify-face 'font-lock-fixme-face "Red" nil nil t nil t nil nil)
+ (modify-face 'font-lock-note-face "Dark Green" nil nil t nil t nil nil)
+
+; Setup my compilation mode
+(defun bostjan-compilation-hook ()
+  (make-local-variable 'truncate-lines)
+  (setq truncate-lines nil)
+)
+
+(add-hook 'compilation-mode-hook 'bostjan-compilation-hook)
+
+
+; style I want to use in c++ mode
+
+;; By default files ending in .h are treated as c files rather than c++ files
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+
+(c-add-style "bostjan-c++-style"
+	     '("bsd"
+	       (indent-tabs-mode . nil)        ; use spaces rather than tabs
+	       (c-basic-offset . 4)            ; indent by four spaces
+	       (c-offsets-alist . ((inline-open . 0)  ; custom indentation rules
+				   (brace-list-open . 0)
+				   (statement-case-open . +)))))
+
+(defun bostjan-c++-mode-hook ()
+  (c-set-style "bostjan-c++-style")
+  (auto-fill-mode)
+  ;; (c-toggle-hungry-state 1)
+  (c-toggle-auto-hungry-state 1))
+
+(add-hook 'c++-mode-hook 'bostjan-c++-mode-hook)
+
+;; You can customise C++ mode key bindings using entries like:
+;; (define-key c++-mode-map "\C-ct" 'some-function-i-want-to-call)

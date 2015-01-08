@@ -70,3 +70,9 @@ C-x
 ;; misc
 M-x font-lock-mode ;; turn on font lock mode for current buffer
 M-y display-time ;; put a clock on the mode line
+
+;; fonts
+C-x C-+ ;; increase font size
+C-x C-- ;; decrease font size
+(global-set-key (kbd "C-+") 'text-scale-increase)
+(global-set-key (kbd "C--") 'text-scale-decrease)
